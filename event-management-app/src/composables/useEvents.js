@@ -9,7 +9,7 @@ const events = ref([
   { eventid: 'EVT10006', eventname: 'Blockchain and Cryptocurrency', category: 'Finance', durationhour: 5 },
   { eventid: 'EVT10007', eventname: 'Entrepreneurship Forum', category: 'Business', durationhour: 7 },
   { eventid: 'EVT10008', eventname: 'Data Science Hackathon', category: 'Technology', durationhour: 12 },
-  { eventid: 'EVT10009', eventname: 'Leadership and Management Summit', category: 'Ligma', durationhour: 9 }
+  { eventid: 'EVT10009', eventname: 'Leadership and Management Summit', category: 'Business', durationhour: 9 }
 ])
 
 export function useEvents() {
