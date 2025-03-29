@@ -4,24 +4,27 @@
     
     <v-card-text>
       <v-form @submit.prevent="handleSubmit">
+        <div class="mb-1">Username</div>
         <v-text-field
           v-model="username"
-          label="Username"
+          aria-label="Username"
           required
           variant="outlined"
         ></v-text-field>
         
+        <div class="mb-1">Password</div>
         <v-text-field
           v-model="password"
-          label="Password"
+          aria-label="Password"
           type="password"
           required
           variant="outlined"
         ></v-text-field>
         
+        <div class="mb-1">Confirm Password</div>
         <v-text-field
           v-model="confirmPassword"
-          label="Confirm Password"
+          aria-label="Confirm Password"
           type="password"
           required
           variant="outlined"
@@ -29,19 +32,27 @@
           :error-messages="!passwordsMatch ? 'Passwords do not match' : ''"
         ></v-text-field>
         
-        <v-radio-group v-model="selectedCategory" label="Event Category">
-          <v-radio label="Business" value="Business"></v-radio>
-          <v-radio label="Technology" value="Technology"></v-radio>
-          <v-radio label="Finance" value="Finance"></v-radio>
-          <v-radio label="Marketing" value="Marketing"></v-radio>
+        <div class="mb-1">Event Category</div>
+        <v-radio-group v-model="selectedCategory">
+          <v-radio 
+            v-for="category in uniqueCategories" 
+            :key="category"
+            :value="category"
+            :aria-label="`${category} category`"
+          >
+            <template #label>
+              <span>{{ category }}</span>
+            </template>
+          </v-radio>
         </v-radio-group>
         
+        <div class="mb-1">Select Event</div>
         <v-select
           v-model="selectedEvent"
           :items="filteredEvents"
           item-title="eventname"
           item-value="eventid"
-          label="Select Event"
+          aria-label="Select Event"
           variant="outlined"
           return-object
         ></v-select>
@@ -73,6 +84,7 @@
 
 <script setup>
 import { ref, computed, watch } from 'vue'
+import { useEvents } from '@/composables/useEvents'
 
 // Form fields
 const username = ref('')
@@ -83,17 +95,13 @@ const selectedEvent = ref(null)
 const showSummary = ref(false)
 
 // Sample events data
-const events = ref([
-  { eventid: 'EVT10001', eventname: 'Tech Innovations Conference', category: 'Technology' },
-  { eventid: 'EVT10002', eventname: 'Startup Pitch Day', category: 'Business' },
-  { eventid: 'EVT10003', eventname: 'AI & Machine Learning Summit', category: 'Technology' },
-  { eventid: 'EVT10004', eventname: 'Cybersecurity Workshop', category: 'Technology' },
-  { eventid: 'EVT10005', eventname: 'Digital Marketing Bootcamp', category: 'Marketing' },
-  { eventid: 'EVT10006', eventname: 'Blockchain and Cryptocurrency', category: 'Finance' },
-  { eventid: 'EVT10007', eventname: 'Entrepreneurship Forum', category: 'Business' },
-  { eventid: 'EVT10008', eventname: 'Data Science Hackathon', category: 'Technology' },
-  { eventid: 'EVT10009', eventname: 'Leadership and Management Summit', category: 'Business' }
-])
+const { events } = useEvents()
+
+// Get unique categories from events
+const uniqueCategories = computed(() => {
+  const categories = new Set(events.value.map(event => event.category))
+  return Array.from(categories)
+})
 
 // Computed properties
 const passwordsMatch = computed(() => {
@@ -121,7 +129,6 @@ watch(selectedCategory, () => {
 const handleSubmit = () => {
   if (isFormValid.value) {
     showSummary.value = true
-    // In a real app, you would send this data to a server
   }
 }
 </script>

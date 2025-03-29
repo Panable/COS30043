@@ -2,25 +2,28 @@
   <div>
     <div class="row mb-4">
       <div class="col-md-4">
+        <div class="mb-1">Search by Event ID</div>
         <v-text-field
           v-model="searchEventId"
-          label="Search by Event ID"
+          aria-label="Search by Event ID"
           variant="outlined"
           clearable
         ></v-text-field>
       </div>
       <div class="col-md-4">
+        <div class="mb-1">Search by Event Name</div>
         <v-text-field
           v-model="searchEventName"
-          label="Search by Event Name"
+          aria-label="Search by Event Name"
           variant="outlined"
           clearable
         ></v-text-field>
       </div>
       <div class="col-md-4">
+        <div class="mb-1">Search by Duration</div>
         <v-text-field
           v-model="searchDuration"
-          label="Search by Duration"
+          aria-label="Search by Duration in hours"
           variant="outlined"
           type="number"
           clearable
@@ -29,12 +32,16 @@
     </div>
     
     <div class="mb-4">
+      <div class="mb-1">Filter by Category</div>
       <v-radio-group v-model="selectedCategory" inline>
-        <v-radio label="All" value="All"></v-radio>
-        <v-radio label="Technology" value="Technology"></v-radio>
-        <v-radio label="Business" value="Business"></v-radio>
-        <v-radio label="Marketing" value="Marketing"></v-radio>
-        <v-radio label="Finance" value="Finance"></v-radio>
+        <v-radio label="All" value="All" aria-label="All categories"></v-radio>
+        <v-radio 
+          v-for="category in uniqueCategories"
+          :key="category"
+          :label="category"
+          :value="category"
+          :aria-label="`${category} category`"
+        ></v-radio>
       </v-radio-group>
     </div>
     
@@ -61,21 +68,23 @@
 
 <script setup>
 import { computed, ref } from 'vue'
+import { useEvents } from '@/composables/useEvents'
 
-const props = defineProps({
-  events: {
-    type: Array,
-    required: true
-  }
-})
+const { events } = useEvents()
 
 const searchEventId = ref('')
 const searchEventName = ref('')
 const searchDuration = ref('')
 const selectedCategory = ref('All')
 
+// Get unique categories from events
+const uniqueCategories = computed(() => {
+  const categories = new Set(events.value.map(event => event.category))
+  return Array.from(categories)
+})
+
 const filteredEvents = computed(() => {
-  return props.events.filter(event => {
+  return events.value.filter(event => {
     const matchesId = searchEventId.value 
       ? event.eventid.toLowerCase().includes(searchEventId.value.toLowerCase())
       : true

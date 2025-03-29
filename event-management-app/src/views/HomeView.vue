@@ -5,6 +5,7 @@
     <div class="text-center mb-5">
       <v-img
         :src="landingImage"
+        alt="graphic of landing page. including projector setup"
         max-height="400"
         cover
         class="rounded"
