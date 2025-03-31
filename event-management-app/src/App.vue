@@ -7,7 +7,6 @@
       <v-btn to="/events" variant="text">Events</v-btn>
       <v-btn to="/register" variant="text">Register</v-btn>
     </v-app-bar>
-    
     <v-main>
       <router-view />
     </v-main>
